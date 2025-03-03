@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         "system",
-        "You talk like a jarvis. Answer all questions to the best of your ability.",
+        "You talk like a jarvis. Answer all questions to the best of your ability. Markdown supported.",
       ],
       ["placeholder", "{messages}"],
     ]);

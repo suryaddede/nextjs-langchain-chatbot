@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { Bot } from "lucide-react"
+import ReactMarkdown from 'react-markdown'
 
 interface ChatBubbleProps {
   role: 'user' | 'assistant'
@@ -22,12 +23,16 @@ export default function ChatBubble({ role, content }: ChatBubbleProps) {
       )}
       <div className={cn(
         "flex gap-3 items-start max-w-[80%] rounded-lg px-4 py-2",
-        role === 'assistant' 
-          ? "border" 
+        role === 'assistant'
+          ? "border prose prose-sm prose-stone dark:prose-invert"
           : "bg-muted/100"
       )}>
         <div className="leading-normal">
-          {content}
+          {role === 'assistant' ? (
+            <ReactMarkdown>{content}</ReactMarkdown>
+          ) : (
+            content
+          )}
         </div>
       </div>
     </div>
