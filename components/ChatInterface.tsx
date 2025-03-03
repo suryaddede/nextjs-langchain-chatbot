@@ -14,13 +14,37 @@ interface Message {
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (input.trim()) {
-      setMessages([...messages, { role: 'user', content: input }])
+    if (input.trim() && !isLoading) {
+      const userMessage: Message = { role: 'user', content: input }
+      setMessages(prev => [...prev, userMessage])
       setInput('')
-      // Here you'll add the API call to your chatbot
+      setIsLoading(true)
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: [...messages, userMessage]
+          }),
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch response')
+
+        const aiMessage = await response.json()
+        console.log(aiMessage)
+        setMessages(prev => [...prev, aiMessage])
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
